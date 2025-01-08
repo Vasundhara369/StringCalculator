@@ -36,17 +36,17 @@ public class StringCalculatorTest {
     }
 
     @Test
-    void negativeNumberThrowsException() {
+    void NegativeNumberThrowsException() {
         StringCalculator calculator = new StringCalculator();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> calculator.add("-1"));
-        assertEquals("negative numbers not allowed -1", exception.getMessage());
+        assertEquals("Negative numbers not allowed: -1", exception.getMessage());
     }
 
     @Test
     void multipleNegativeNumbersThrowsException() {
         StringCalculator calculator = new StringCalculator();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> calculator.add("-1,-2,-3"));
-        assertEquals("negative numbers not allowed -1, -2, -3", exception.getMessage());
+        assertEquals("Negative numbers not allowed: -1, -2, -3", exception.getMessage());
     }
 
     @Test

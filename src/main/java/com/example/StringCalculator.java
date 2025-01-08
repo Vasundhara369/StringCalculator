@@ -14,6 +14,7 @@ public class StringCalculator {
         }
 
         String delimiter = DEFAULT_DELIMITER;
+
         if (numbers.startsWith("//")) {
             delimiter = extractCustomDelimiter(numbers);
             if (delimiter == null) {
@@ -22,33 +23,7 @@ public class StringCalculator {
             numbers = numbers.substring(numbers.indexOf('\n') + 1);
         }
 
-        String[] nums = numbers.split(delimiter);
-
-        List<Integer> negativeNumbers = new ArrayList<>();
-        int sum = 0;
-        for (String numStr : nums) {
-            if (numStr != null && !numStr.trim().isEmpty()) {
-                try {
-                    int num = Integer.parseInt(numStr.trim());
-                    if (num < 0) {
-                        negativeNumbers.add(num);
-                    } else if (num <= 1000) {
-                        sum += num;
-                    }
-                } catch (NumberFormatException e) {
-                    // Ignore non-numeric input
-                }
-            }
-        }
-
-        if (!negativeNumbers.isEmpty()) {
-            String negativeNumbersString = negativeNumbers.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(", "));
-            throw new IllegalArgumentException("negative numbers not allowed " + negativeNumbersString);
-        }
-
-        return sum;
+        return sumNumbers(numbers, delimiter);
     }
 
     private String extractCustomDelimiter(String numbers) { // New method
@@ -70,5 +45,35 @@ public class StringCalculator {
         return Arrays.stream(delimiters.split("]\\["))
                 .map(Pattern::quote)
                 .collect(Collectors.joining("|"));
+    }
+
+    private int sumNumbers(String numbers, String delimiter) { // New method
+        String[] nums = numbers.split(delimiter);
+        List<Integer> negativeNumbers = new ArrayList<>();
+        int sum = 0;
+
+        for (String numStr : nums) {
+            if (numStr != null && !numStr.trim().isEmpty()) {
+                try {
+                    int num = Integer.parseInt(numStr.trim());
+                    if (num < 0) {
+                        negativeNumbers.add(num);
+                    } else if (num <= 1000) {
+                        sum += num;
+                    }
+                } catch (NumberFormatException e) {
+                    // Ignore non-numeric input
+                }
+            }
+        }
+
+        if (!negativeNumbers.isEmpty()) {
+            String negativeNumbersString = negativeNumbers.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(", "));
+            throw new IllegalArgumentException("Negative numbers not allowed: " + negativeNumbersString); // Improved message
+        }
+
+        return sum;
     }
 }
