@@ -66,4 +66,10 @@ public class StringCalculatorTest {
         StringCalculator calculator = new StringCalculator();
         assertEquals(6, calculator.add("//[*][%]\n1*2%3"));
     }
+
+    @Test
+    void numbersGreaterThan1000AreIgnoredWithMultipleDelimiters() {
+        StringCalculator calculator = new StringCalculator();
+        assertEquals(3, calculator.add("//[*][%]\n1*1001%2"));
+    }
 }
