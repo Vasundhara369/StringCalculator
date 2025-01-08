@@ -29,7 +29,7 @@ public class StringCalculator {
             int num = Integer.parseInt(numStr.trim());
             if (num < 0) {
                 negativeNumbers.add(num);
-            } else {
+            } else if(num <= 1000){ // Ignore numbers > 1000
                 sum += num;
             }
         }
