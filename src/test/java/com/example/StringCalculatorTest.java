@@ -48,4 +48,10 @@ public class StringCalculatorTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> calculator.add("-1,-2,-3"));
         assertEquals("negative numbers not allowed -1, -2, -3", exception.getMessage());
     }
+
+    @Test
+    void numbersGreaterThan1000AreIgnored() {
+        StringCalculator calculator = new StringCalculator();
+        assertEquals(2, calculator.add("1001,2"));
+    }
 }
