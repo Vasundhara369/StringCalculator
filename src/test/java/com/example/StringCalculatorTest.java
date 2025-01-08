@@ -21,4 +21,10 @@ public class StringCalculatorTest {
         StringCalculator calculator = new StringCalculator();
         assertEquals(3, calculator.add("1,2"));
     }
+
+    @Test
+    void numbersWithNewLinesReturnSum() {
+        StringCalculator calculator = new StringCalculator();
+        assertEquals(6, calculator.add("1\n2,3"));
+    }
 }
