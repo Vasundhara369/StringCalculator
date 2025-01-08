@@ -1,8 +1,11 @@
 package com.example;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class StringCalculator {
     public int add(String numbers) {
@@ -18,6 +21,26 @@ public class StringCalculator {
                 numbers = matcher.group(2);
             }
         }
-        return Arrays.stream(numbers.split(delimiter)).mapToInt(Integer::parseInt).sum();
+        String[] nums = numbers.split(delimiter);
+
+        List<Integer> negativeNumbers = new ArrayList<>();
+        int sum = 0;
+        for (String numStr : nums) {
+            int num = Integer.parseInt(numStr.trim());
+            if (num < 0) {
+                negativeNumbers.add(num);
+            } else {
+                sum += num;
+            }
+        }
+
+        if (!negativeNumbers.isEmpty()) {
+            String negativeNumbersString = negativeNumbers.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(", "));
+            throw new IllegalArgumentException("negative numbers not allowed " + negativeNumbersString);
+        }
+
+        return sum;
     }
 }
