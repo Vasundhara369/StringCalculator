@@ -7,27 +7,19 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringCalculator {
+    private static final String DEFAULT_DELIMITER = ",|\n";
     public int add(String numbers) {
         if (numbers == null || numbers.isEmpty()) {
             return 0;
         }
 
-        String delimiter = ",|\n";
+        String delimiter = DEFAULT_DELIMITER;
         if (numbers.startsWith("//")) {
-            int newlineIndex = numbers.indexOf('\n');
-            if (newlineIndex != -1) {
-                delimiter = numbers.substring(2, newlineIndex);
-                numbers = numbers.substring(newlineIndex + 1);
-
-                if (delimiter.startsWith("[") && delimiter.endsWith("]")) {
-                    delimiter = delimiter.substring(1, delimiter.length() - 1);
-                    delimiter = parseDelimiters(delimiter);
-                } else {
-                    delimiter = Pattern.quote(delimiter);
-                }
-            } else {
+            delimiter = extractCustomDelimiter(numbers);
+            if (delimiter == null) {
                 return 0;
             }
+            numbers = numbers.substring(numbers.indexOf('\n') + 1);
         }
 
         String[] nums = numbers.split(delimiter);
@@ -59,7 +51,22 @@ public class StringCalculator {
         return sum;
     }
 
-    private String parseDelimiters(String delimiters){
+    private String extractCustomDelimiter(String numbers) { // New method
+        int newlineIndex = numbers.indexOf('\n');
+        if (newlineIndex == -1) {
+            return null;
+        }
+
+        String delimiter = numbers.substring(2, newlineIndex);
+        if (delimiter.startsWith("[") && delimiter.endsWith("]")) {
+            delimiter = delimiter.substring(1, delimiter.length() - 1);
+            return parseMultipleDelimiters(delimiter);
+        } else {
+            return Pattern.quote(delimiter);
+        }
+    }
+
+    private String parseMultipleDelimiters(String delimiters){
         return Arrays.stream(delimiters.split("]\\["))
                 .map(Pattern::quote)
                 .collect(Collectors.joining("|"));
