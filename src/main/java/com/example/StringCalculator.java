@@ -9,22 +9,25 @@ import java.util.stream.Collectors;
 
 public class StringCalculator {
     public int add(String numbers) {
-        if (numbers.isEmpty()) {
+        if (numbers == null || numbers.isEmpty()) {
             return 0;
         }
 
         String delimiter = ",|\n";
         if (numbers.startsWith("//")) {
-            Matcher matcher = Pattern.compile("//\\[(.*?)\\]\n(.*)").matcher(numbers);
-            if (matcher.find()) {
-                delimiter = parseDelimiters(matcher.group(1));
-                numbers = matcher.group(2);
-            } else {
-                matcher = Pattern.compile("//(.)\n(.*)").matcher(numbers);
-                if (matcher.find()) {
-                    delimiter = matcher.group(1);
-                    numbers = matcher.group(2);
+            int newlineIndex = numbers.indexOf('\n');
+            if (newlineIndex != -1) {
+                delimiter = numbers.substring(2, newlineIndex);
+                numbers = numbers.substring(newlineIndex + 1);
+
+                if (delimiter.startsWith("[") && delimiter.endsWith("]")) {
+                    delimiter = delimiter.substring(1, delimiter.length() - 1);
+                    delimiter = parseDelimiters(delimiter);
+                } else {
+                    delimiter = Pattern.quote(delimiter);
                 }
+            } else {
+                return 0;
             }
         }
 
@@ -33,8 +36,14 @@ public class StringCalculator {
         List<Integer> negativeNumbers = new ArrayList<>();
         int sum = 0;
         for (String numStr : nums) {
-            int num = parseNumber(numStr.trim(), negativeNumbers);
-            sum += num;
+            if (!numStr.isEmpty()) {
+                try {
+                    int num = parseNumber(numStr.trim(), negativeNumbers);
+                    sum += num;
+                } catch (NumberFormatException e) {
+                    // Ignore non-numeric input
+                }
+            }
         }
 
         if (!negativeNumbers.isEmpty()) {
