@@ -1,0 +1,3 @@
+StringCalculator
+================
+TDD exercise
