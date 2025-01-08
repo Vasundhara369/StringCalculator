@@ -60,4 +60,10 @@ public class StringCalculatorTest {
         StringCalculator calculator = new StringCalculator();
         assertEquals(6, calculator.add("//[***]\n1***2***3"));
     }
+
+    @Test
+    void multipleDifferentDelimitersWithMultipleCharacters() {
+        StringCalculator calculator = new StringCalculator();
+        assertEquals(6, calculator.add("//[*][%]\n1*2%3"));
+    }
 }

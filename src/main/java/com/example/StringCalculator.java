@@ -54,4 +54,3 @@ public class StringCalculator {
         return num <= 1000 ? num: 0;
     }
 }
-
