@@ -26,12 +26,8 @@ public class StringCalculator {
         List<Integer> negativeNumbers = new ArrayList<>();
         int sum = 0;
         for (String numStr : nums) {
-            int num = Integer.parseInt(numStr.trim());
-            if (num < 0) {
-                negativeNumbers.add(num);
-            } else if(num <= 1000){ // Ignore numbers > 1000
-                sum += num;
-            }
+            int num = parseNumber(numStr.trim(), negativeNumbers);
+            sum += num;
         }
 
         if (!negativeNumbers.isEmpty()) {
@@ -42,5 +38,13 @@ public class StringCalculator {
         }
 
         return sum;
+    }
+
+    private int parseNumber(String numStr, List<Integer> negativeNumbers) {
+        int num = Integer.parseInt(numStr);
+        if (num < 0){
+            negativeNumbers.add(num);
+        }
+        return num <= 1000 ? num: 0;
     }
 }
