@@ -3,7 +3,6 @@ package com.example;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -36,10 +35,14 @@ public class StringCalculator {
         List<Integer> negativeNumbers = new ArrayList<>();
         int sum = 0;
         for (String numStr : nums) {
-            if (!numStr.isEmpty()) {
+            if (numStr != null && !numStr.trim().isEmpty()) {
                 try {
-                    int num = parseNumber(numStr.trim(), negativeNumbers);
-                    sum += num;
+                    int num = Integer.parseInt(numStr.trim());
+                    if (num < 0) {
+                        negativeNumbers.add(num);
+                    } else if (num <= 1000) {
+                        sum += num;
+                    }
                 } catch (NumberFormatException e) {
                     // Ignore non-numeric input
                 }
@@ -60,13 +63,5 @@ public class StringCalculator {
         return Arrays.stream(delimiters.split("]\\["))
                 .map(Pattern::quote)
                 .collect(Collectors.joining("|"));
-    }
-
-    private int parseNumber(String numStr, List<Integer> negativeNumbers) {
-        int num = Integer.parseInt(numStr);
-        if (num < 0){
-            negativeNumbers.add(num);
-        }
-        return num <= 1000 ? num: 0;
     }
 }
