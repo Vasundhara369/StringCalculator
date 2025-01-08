@@ -14,7 +14,13 @@ public class StringCalculator {
         }
 
         String delimiter = ",|\n";
-        if (numbers.startsWith("//")) {
+        if (numbers.startsWith("//[")) {
+            Matcher matcher = Pattern.compile("//\\[(.*?)\\]\n(.*)").matcher(numbers);
+            if (matcher.find()) {
+                delimiter = Pattern.quote(matcher.group(1));
+                numbers = matcher.group(2);
+            }
+        } else if (numbers.startsWith("//")) {
             Matcher matcher = Pattern.compile("//(.)\n(.*)").matcher(numbers);
             if (matcher.find()) {
                 delimiter = matcher.group(1);
@@ -48,3 +54,4 @@ public class StringCalculator {
         return num <= 1000 ? num: 0;
     }
 }
+
