@@ -14,19 +14,20 @@ public class StringCalculator {
         }
 
         String delimiter = ",|\n";
-        if (numbers.startsWith("//[")) {
+        if (numbers.startsWith("//")) {
             Matcher matcher = Pattern.compile("//\\[(.*?)\\]\n(.*)").matcher(numbers);
             if (matcher.find()) {
-                delimiter = Pattern.quote(matcher.group(1));
+                delimiter = parseDelimiters(matcher.group(1));
                 numbers = matcher.group(2);
-            }
-        } else if (numbers.startsWith("//")) {
-            Matcher matcher = Pattern.compile("//(.)\n(.*)").matcher(numbers);
-            if (matcher.find()) {
-                delimiter = matcher.group(1);
-                numbers = matcher.group(2);
+            } else {
+                matcher = Pattern.compile("//(.)\n(.*)").matcher(numbers);
+                if (matcher.find()) {
+                    delimiter = matcher.group(1);
+                    numbers = matcher.group(2);
+                }
             }
         }
+
         String[] nums = numbers.split(delimiter);
 
         List<Integer> negativeNumbers = new ArrayList<>();
@@ -44,6 +45,12 @@ public class StringCalculator {
         }
 
         return sum;
+    }
+
+    private String parseDelimiters(String delimiters){
+        return Arrays.stream(delimiters.split("]\\["))
+                .map(Pattern::quote)
+                .collect(Collectors.joining("|"));
     }
 
     private int parseNumber(String numStr, List<Integer> negativeNumbers) {
